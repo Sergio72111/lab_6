@@ -14,7 +14,7 @@ public:
     void addPrimitive(std::shared_ptr<Primitive> primitive) {
         primitives.push_back(primitive);
         std::cout << "В документ " << name << " добавлен примитив " << primitive->getType() << ": "<< primitive->getName() << std::endl;
-    }
+    } 
 
     void removePrimitive(const std::string& primitiveName, const std::string& primitiveType) {
         auto it = std::find_if(primitives.begin(), primitives.end(),[&](const std::shared_ptr<Primitive>& p) {return p->getName() == primitiveName && p->getType() == primitiveType;});
