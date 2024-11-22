@@ -19,7 +19,7 @@ public:
     void removePrimitive(const std::string& primitiveName, const std::string& primitiveType) {
         auto it = std::find_if(primitives.begin(), primitives.end(),[&](const std::shared_ptr<Primitive>& p) {return p->getName() == primitiveName && p->getType() == primitiveType;});
         if (it != primitives.end()) {
-            std::cout << "Из документа " << name << " удален примитив " << (*it)->getName() << " типа " << (*it)->getType() << std::endl;
+            std::cout << "Из документа " << name << " удален примитив " << (*it)->getName() << " типа " << (*it)->getType() << std::endl; 
             primitives.erase(it);
         } else {
             std::cout << "Примитив с именем '" << primitiveName << "' типа '" << primitiveType << "' не найден." << std::endl;
