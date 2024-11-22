@@ -18,7 +18,7 @@ jobs:
     - run: cpack -G ZIP # Explicitly specify ZIP generator
     - name: Run Tests
       run: |
-        ctest --output-on-failure || exit 1
+        ctest --output-on-failure || exit 1   
     - name: Create Release (MacOS)
       id: create_release_macos
       uses: actions/create-release@v1
