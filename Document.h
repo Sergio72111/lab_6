@@ -20,19 +20,19 @@ public:
     void removePrimitive(const std::string& primitiveName, const std::string& primitiveType) { // Метод для удаления примитива по имени и типу
         auto it = std::find_if(primitives.begin(), primitives.end(),[&](const std::shared_ptr<Primitive>& p) {return p->getName() == primitiveName && p->getType() == primitiveType;}); // Поиск примитива в векторе по имени и типу
         if (it != primitives.end()) { // Если примитив найден
-            std::cout << "Из документа " << name << " удален примитив " << (*it)->getName() << " типа " << (*it)->getType() << std::endl;  // Вывод сообщения об удалении примитива
+            std::cout << "Из документа " << name << " удален примитив " << (*it)->getName() << " типа " << (*it)->getType() << std::endl;  
             primitives.erase(it); // Удаление найденного примитива из вектора
         } else { // Если примитив не найден
-            std::cout << "Примитив с именем '" << primitiveName << "' типа '" << primitiveType << "' не найден." << std::endl; // Вывод сообщения о том, что примитив не найден
+            std::cout << "Примитив с именем '" << primitiveName << "' типа '" << primitiveType << "' не найден." << std::endl; 
         }
     }
 
     void saveToFile(const std::string& filename) { // Метод для сохранения документа в файл
-        std::cout << "Документ " << name << " сохранен в файл " << filename << std::endl; // Вывод сообщения о сохранении документа
+        std::cout << "Документ " << name << " сохранен в файл " << filename << std::endl; 
     }
 
     void loadFromFile(const std::string& filename) { // Метод для загрузки документа из файла
-        std::cout << "Документ " << name << " загружен из файла " << filename << std::endl; // Вывод сообщения о загрузке документа
+        std::cout << "Документ " << name << " загружен из файла " << filename << std::endl; 
     }
 
     std::string getName() const { // Метод для получения имени документа
@@ -41,13 +41,13 @@ public:
 
     void drawAllPrimitives() const { // Метод для отрисовки всех примитивов в документе
         for (const auto& primitive : primitives) { // Цикл по всем примитивам в векторе
-            std::cout << "Отрисовка " << primitive->get() << std::endl;; // Вывод сообщения об отрисовке текущего примитива
+            std::cout << "Отрисовка " << primitive->get() << std::endl;; 
         }
     }
 
     void deleteAllPrimitives() const { // Метод для удаления всех примитивов в документе
         for (const auto& primitive : primitives) { // Цикл по всем примитивам в векторе
-            std::cout << "Удаление " << primitive->get() << std::endl;; // Вывод сообщения об удалении текущего примитива
+            std::cout << "Удаление " << primitive->get() << std::endl;; 
         }
     }
 
