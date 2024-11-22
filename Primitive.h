@@ -1,88 +1,94 @@
-#ifndef PRIMITIVE_H
-#define PRIMITIVE_H
+#ifndef PRIMITIVE_H 
+#define PRIMITIVE_H 
 
-#include <string>
-#include <sstream>
+#include <string> 
+#include <sstream> 
 
-class Primitive {
-public:
-    Primitive(const std::string& name, const std::string& type) : name(name), type(type) {}
+class Primitive { // Определение абстрактного базового класса Primitive
+public: // Объявление публичной секции класса
 
-    std::string getName() const {
-        return name;
+    Primitive(const std::string& name, const std::string& type) : name(name), type(type) {} // Конструктор класса, инициализирующий имя и тип примитива
+
+    std::string getName() const { // Метод для получения имени примитива
+        return name; // Возврат имени примитива
     }
 
-    std::string getType() const {
-        return type;
+    std::string getType() const { // Метод для получения типа примитива
+        return type; // Возврат типа примитива
     }
 
-    virtual ~Primitive() = default; // Важно для полиморфизма
+    virtual ~Primitive() = default; // Виртуальный деструктор для полиморфизма, позволяет корректно освобождать ресурсы производных классов
 
-    virtual void draw() = 0; // Виртуальный метод для отрисовки (будет реализован в производных классах)
-    virtual std::string get() const = 0; // Чисто виртуальный метод
+    virtual void draw() = 0; // Чисто виртуальный метод для отрисовки примитива (должен быть реализован в производных классах)
+    virtual std::string get() const = 0; // Чисто виртуальный метод для получения информации о примитиве (должен быть реализован в производных классах)
 
-private:
-    std::string name;
-    std::string type;
+private: // Объявление приватной секции класса
+    std::string name; // Имя примитива (строка)
+    std::string type; // Тип примитива (строка)
 };
 
-class Rectangle : public Primitive {
-public:
-    Rectangle(const std::string& name, double width, double height) :
-        Primitive(name, "rectangle"), width(width), height(height) {}
+class Rectangle : public Primitive { // Определение класса Rectangle, наследующего от Primitive
+public: // Объявление публичной секции класса
+    Rectangle(const std::string& name, double width, double height) : // Конструктор класса, инициализирующий имя, ширину и высоту
+        Primitive(name, "rectangle"), width(width), height(height) {} // Инициализация базового класса с типом "rectangle"
 
-    void draw() override {
-        std::cout << "Отрисовка прямоугольника " << getName() << " (стороны: " << width << ", " << height << ")" << std::endl;
+    void draw() override { // Переопределение метода draw для отрисовки прямоугольника
+        std::cout << "Отрисовка прямоугольника " << getName() << " (стороны: " << width << ", " << height << ")" << std::endl; 
     }
-    double getWidth() const { return width; }
+    
+    double getWidth() const { return width; } // Метод для получения ширины прямоугольника
 
-    std::string get() const override {
-        return "прямоугольника " + getName() + " (стороны: " + std::to_string(width) + ", " + std::to_string(height) + ")";
+    std::string get() const override { // Переопределение метода get для получения информации о прямоугольнике
+        return "прямоугольника " + getName() + " (стороны: " + std::to_string(width) + ", " + std::to_string(height) + ")"; 
     }
 
-private:
-    double width;
-    double height;
+private: // Объявление приватной секции класса
+    double width; // Ширина прямоугольника
+    double height; // Высота прямоугольника
 };
 
-class Square : public Rectangle { // Наследуется от Rectangle
-public:
-    Square(const std::string& name, double side) : Rectangle(name, side, side) {} // side используется для ширины и высоты
-    void draw() override {
-        std::cout << "Отрисовка квадрата " << getName() << " (сторона: " <<  getWidth() << ")" << std::endl; // Выводим только сторону
+class Square : public Rectangle { // Определение класса Square, наследующего от Rectangle
+public: // Объявление публичной секции класса
+    Square(const std::string& name, double side) : Rectangle(name, side, side) {} // Конструктор использует сторону как ширину и высоту
+
+    void draw() override { // Переопределение метода draw для отрисовки квадрата
+        std::cout << "Отрисовка квадрата " << getName() << " (сторона: " <<  getWidth() << ")" << std::endl; 
     }
-    std::string get() const override {
-        return "квадрата " + getName() + " (сторона: " + std::to_string(getWidth()) + ")";
+
+    std::string get() const override { // Переопределение метода get для получения информации о квадрате
+        return "квадрата " + getName() + " (сторона: " + std::to_string(getWidth()) + ")"; 
     }
-  
 };
 
+class Circle : public Primitive { // Определение класса Circle, наследующего от Primitive
+public: // Объявление публичной секции класса
+    Circle(const std::string& name, double radius) : Primitive(name, "circle"), radius(radius) {} // Конструктор класса инициализирует имя и радиус круга
 
-class Circle : public Primitive {
-public:
-    Circle(const std::string& name, double radius) : Primitive(name, "circle"), radius(radius) {}
-    void draw() override {
-        std::cout << "Отрисовка круга " << getName() << " (радиус: " << radius << ")" << std::endl;
-    }
-    std::string get() const override {
-        return "круга " + getName() + " (радиус: " + std::to_string(radius) + ")";
+    void draw() override { // Переопределение метода draw для отрисовки круга
+        std::cout << "Отрисовка круга " << getName() << " (радиус: " << radius << ")" << std::endl; 
     }
 
-private:
-    double radius;
+    std::string get() const override { // Переопределение метода get для получения информации о круге
+        return "круга " + getName() + " (радиус: " + std::to_string(radius) + ")"; // Формирование строки с информацией о круге
+    }
+
+private: // Объявление приватной секции класса
+    double radius; // Радиус круга
 };
 
-class Triangle : public Primitive {
-public:
-    Triangle(const std::string& name, double a, double b, double c) : Primitive(name, "triangle"), a(a), b(b), c(c) {}
-    void draw() override {
-        std::cout << "Отрисовка треугольника " << getName() << " (стороны: " << a << ", " << b << ", " << c << ")" << std::endl;
+class Triangle : public Primitive { // Определение класса Triangle, наследующего от Primitive
+public: // Объявление публичной секции класса
+    Triangle(const std::string& name, double a, double b, double c) : Primitive(name, "triangle"), a(a), b(b), c(c) {} // Конструктор класса инициализирует имя и длины сторон треугольника
+
+    void draw() override { // Переопределение метода draw для отрисовки треугольника
+        std::cout << "Отрисовка треугольника " << getName() << " (стороны: " << a << ", " << b << ", " << c << ")" << std::endl; 
     }
-    std::string get() const override {
-        return "треугольника " + getName() + " (стороны: " + std::to_string(a) + ", " + std::to_string(b)  + ", " + std::to_string(c)+ ")";
+
+    std::string get() const override { // Переопределение метода get для получения информации о треугольнике
+        return "треугольника " + getName() + " (стороны: " + std::to_string(a) + ", " + std::to_string(b)  + ", " + std::to_string(c)+ ")";  // Формирование строки с информацией о треугольнике 
     }
-private:
-    double a, b, c;
+private:  // Объявление приватной секции класса 
+    double a, b, c;  // Длины сторон треугольника 
 };
 
-#endif
+#endif  // Завершение условия компиляции для заголовка PRIMITIVE_H 
