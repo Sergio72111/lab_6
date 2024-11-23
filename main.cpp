@@ -31,7 +31,7 @@ int main() {
             }
             case 3: {
                 std::cout << "Введите имя документа для сохранения: ";
-                std::string filename;
+                std::string filename; 
                 std::cin >> filename;
                 controller.saveDocument(filename);
                 break;
