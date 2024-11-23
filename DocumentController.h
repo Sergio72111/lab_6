@@ -90,10 +90,21 @@ public:
             std::cout << "Документ не создан.\n";  
         }
     }
-    
+
     void removePrimitive(const std::string& primitiveName, const std::string& primitiveType) {  // Метод для удаления примитива по имени и типу 
         if (!documents.empty()) {  // Проверка, существует ли хотя бы один документ 
-            documents.back()->removePrimitive(primitiveName, primitiveType);  // Вызов метода удаления примитива из последнего созданного документа 
+            bool found = false;
+            for (const auto& doc : documents) {  // Перебор всех документов в векторе
+                if (doc->getName() == primitiveType) {
+                    doc->removePrimitive(primitiveName, primitiveType);  // Вызов метода удаления примитива из документа 
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                std::cout << "Примитив '" << primitiveName << "' типа '" << primitiveType << "' не найден в любом документе." << std::endl;
+            }
         } else {  // Если документов нет 
             std::cout << "Документ не создан." << std::endl;  
         }
