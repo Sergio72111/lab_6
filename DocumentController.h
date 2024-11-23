@@ -1,129 +1,105 @@
-#ifndef DOCUMENTCONTROLLER_H // Проверка, определен ли уже заголовок DOCUMENTCONTROLLER_H
-#define DOCUMENTCONTROLLER_H // Определение заголовка DOCUMENTCONTROLLER_H
+#ifndef DOCUMENTCONTROLLER_H
+#define DOCUMENTCONTROLLER_H
 
-#include <memory> // Подключение библиотеки для работы с умными указателями
-#include <vector> // Подключение библиотеки для работы с векторами
-#include <iostream> // Подключение библиотеки для ввода-вывода
-#include "Document.h" // Подключение заголовка Document.h, который содержит определение класса Document
+#include <memory>
+#include "Document.h"
 
-class DocumentController { 
-public: 
-
-    void createDocument() { // Метод для создания нового документа
-        std::cout << "Введите имя нового документа: "; 
-        std::string name; // Переменная для хранения имени документа
-        std::cin >> name; // Считывание имени документа с ввода
-        auto newDocument = std::make_shared<Document>(name); // Создание нового объекта Document
-        documents.push_back(newDocument); // Добавление документа в вектор
-        std::cout << "Создан документ " << newDocument->getName() << std::endl; 
+class DocumentController {
+public:
+    void createDocument() {
+        std::cout << "Введите имя нового документа: ";
+        std::string name;
+        std::cin >> name;
+        document = std::make_shared<Document>(name);
+        std::cout << "Создан документ " << document->getName() << std::endl;
     }
 
-    void openDocument(const std::string& filename) { // Метод для открытия существующего документа по имени файла
-        for (const auto& doc : documents) { // Перебор всех документов в векторе
-            if (doc->getName() == filename) { // Проверка, совпадает ли имя документа с именем файла
-                std::cout << "Открыт документ " << filename << std::endl; 
-                std::cout << "Примитивы в документе:" << std::endl; 
-                doc->drawAllPrimitives(); // Вызов метода для отрисовки всех примитивов в документе
-                return; // Выход из метода после успешного открытия документа
-            }
-        }
-        std::cout << "Документ '" << filename << "' не найден."<< std::endl; // Если документ не найден
-    }
-
-    void saveDocument(const std::string& filename) { // Метод для сохранения документа в файл
-        for (const auto& doc : documents) { // Перебор всех документов в векторе
-            if (doc->getName() == filename) { // Проверка, совпадает ли имя документа с именем файла
-                doc->saveToFile(filename); // Вызов метода для сохранения документа в файл
-                std::cout << "Примитивы в документе:" << std::endl; 
-                doc->drawAllPrimitives(); // Вызов метода для отрисовки всех примитивов в документе после сохранения
-                return; // Выход из метода после успешного сохранения документа
-            }
-        }
-        std::cout << "Документ '" << filename << "' не найден."<< std::endl; // Если документ не найден
-    }
-
-    void addPrimitive(const std::string& type) { // Метод для добавления примитива в документ по типу примитива
-        if (!documents.empty()) { // Проверка, существует ли хотя бы один документ
-            std::cout << "Введите имя примитива: "; 
-            std::string name; // Переменная для хранения имени примитива
-            std::cin >> name; // Считывание имени примитива с ввода
-            
-            auto currentDocument = documents.back(); // Используем последний созданный документ
-
-            if (type == "rectangle") {
-                std::cout << "Введите ширину: "; 
-                double width; 
-                std::cin >> width; 
-                std::cout << "Введите высоту: "; 
-                double height; 
-                std::cin >> height; 
-                currentDocument->addPrimitive(std::make_shared<Rectangle>(name, width, height)); 
-
-            } else if (type == "square") {
-                std::cout << "Введите длину стороны: "; 
-                double side; 
-                std::cin >> side; 
-                currentDocument->addPrimitive(std::make_shared<Square>(name, side)); 
-
-            } else if (type == "circle") {
-                std::cout << "Введите радиус: "; 
-                double radius; 
-                std::cin >> radius; 
-                currentDocument->addPrimitive(std::make_shared<Circle>(name, radius)); 
-
-            } else if (type == "triangle") {
-                std::cout << "Введите длину стороны a: "; 
-                double a; 
-                std::cin >> a; 
-                std::cout << "Введите длину стороны b: "; 
-                double b; 
-                std::cin >> b; 
-                std::cout << "Введите длину стороны c: "; 
-                double c;  
-                std::cin >> c;
-                currentDocument->addPrimitive(std::make_shared<Triangle>(name, a, b, c)); 
-
-            } else {
-                std::cout << "Неподдерживаемый тип примитива.\n";  
-            }
+    void openDocument(const std::string& filename) {
+        if (document->getName() == filename) {
+            std::cout << "Открыт документ " << filename << std::endl;
+            std::cout << "Примитивы в документе:" << std::endl;
+            document->drawAllPrimitives();
         } else {
-            std::cout << "Документ не создан.\n";  
+            std::cout << "Документ не создан."<<std::endl;
         }
     }
 
-    void removePrimitive(const std::string& primitiveName, const std::string& primitiveType) {  // Метод для удаления примитива по имени и типу 
-        if (!documents.empty()) {  // Проверка, существует ли хотя бы один документ 
-            bool found = false;
-            for (const auto& doc : documents) {  // Перебор всех документов в векторе
-                if (doc->getName() == primitiveType) {
-                    doc->removePrimitive(primitiveName, primitiveType);  // Вызов метода удаления примитива из документа 
-                    found = true;
-                    break;
-                }
-            }
-            
-            if (!found) {
-                std::cout << "Примитив '" << primitiveName << "' типа '" << primitiveType << "' не найден в любом документе." << std::endl;
-            }
-        } else {  // Если документов нет 
-            std::cout << "Документ не создан." << std::endl;  
+    void saveDocument(const std::string& filename) {
+        if (document->getName() == filename) {
+            document->saveToFile(filename);
+            std::cout << "Примитивы в документе:" << std::endl;
+            document->drawAllPrimitives();//вызов функции отрисовки для вывода в консоль всех примитивов добавленных в данный документ
+        } else {
+            std::cout << "Документ не создан."<<std::endl;
         }
     }
 
-    void removeDocument(const std::string& filename) {  // Метод для удаления документа по имени файла 
-        for (auto it = documents.begin(); it != documents.end(); ++it) {  // Перебор всех документов в векторе
-            if ((*it)->getName() == filename) {  // Проверка, совпадает ли имя документа с именем файла 
-                std::cout << "Удаление документа '" << filename << "' и всех содержащихся примитивов:" << std::endl;
-                (*it)->deleteAllPrimitives();  // Вызов метода удаления всех примитивов из документа 
-                documents.erase(it);  // Удаление указателя на документ из вектора
-                return;
-            }
+    void addPrimitive(const std::string& type) {
+    if (document) {
+        std::cout << "Введите имя примитива: ";
+        std::string name;
+        std::cin >> name;
+
+        if (type == "rectangle") {
+            std::cout << "Введите ширину: ";
+            double width;
+            std::cin >> width;
+            std::cout << "Введите высоту: ";
+            double height;
+            std::cin >> height;
+            document->addPrimitive(std::make_shared<Rectangle>(name, width, height));
+
+        } else if (type == "square") {
+            std::cout << "Введите длину стороны: ";
+            double side;
+            std::cin >> side;
+            document->addPrimitive(std::make_shared<Square>(name, side));
+
+        } else if (type == "circle") {
+            std::cout << "Введите радиус: ";
+            double radius;
+            std::cin >> radius;
+            document->addPrimitive(std::make_shared<Circle>(name, radius));
+
+        } else if (type == "triangle") {
+            std::cout << "Введите длину стороны a: ";
+            double a;
+            std::cin >> a;
+            std::cout << "Введите длину стороны b: ";
+            double b;
+            std::cin >> b;
+            std::cout << "Введите длину стороны c: ";
+            double c;
+            std::cin >> c;
+            document->addPrimitive(std::make_shared<Triangle>(name, a, b, c));
+
+        } else {
+            std::cout << "Неподдерживаемый тип примитива.\n";
         }
-        std::cout << "Документ '" << filename << "' не найден." << std::endl;  // Если документ не найден
+    } else {
+        std::cout << "Документ не создан.\n";
+    }
+}
+    
+    void removePrimitive(const std::string& primitiveName, const std::string& primitiveType) {
+        if (document) {
+            document->removePrimitive(primitiveName, primitiveType);
+        } else {
+            std::cout << "Документ не создан." << std::endl;
+        }
     }
 
-private:  // Объявление приватной секции класса 
-    std::vector<std::shared_ptr<Document>> documents;  // Вектор умных указателей на объекты Document, представляющие все открытые документы 
+    void removeDocument(const std::string& filename) {
+        if (document->getName() == filename) {
+            std::cout << "Удаление документа '" << filename << "' и всех содержащихся примитивов:" << std::endl;
+            document->deleteAllPrimitives();
+            document.reset(); // Удаляет указатель на документ; примитивы удаляются автоматически, если нет других ссылок
+        } else {
+            std::cout << "Документ не создан." << std::endl;
+        }
+    }
+private:
+    std::shared_ptr<Document> document;
 };
 
-#endif  // Завершение условия компиляции для заголовка DOCUMENTCONTROLLER_H  
+#endif
