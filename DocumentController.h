@@ -2,6 +2,8 @@
 #define DOCUMENTCONTROLLER_H
 
 #include <memory>
+#include <iostream>
+#include <unordered_map>
 #include "Document.h"
 
 class DocumentController {
@@ -10,96 +12,114 @@ public:
         std::cout << "Введите имя нового документа: ";
         std::string name;
         std::cin >> name;
-        document = std::make_shared<Document>(name);
-        std::cout << "Создан документ " << document->getName() << std::endl;
+
+        // Check if document already exists
+        if (documents.find(name) != documents.end()) {
+            std::cout << "Документ с таким именем уже существует." << std::endl;
+            return;
+        }
+
+        documents[name] = std::make_shared<Document>(name);
+        std::cout << "Создан документ " << name << std::endl;
     }
 
     void openDocument(const std::string& filename) {
-        if (document->getName() == filename) {
+        auto it = documents.find(filename);
+        if (it != documents.end()) {
+            auto& document = it->second;
             std::cout << "Открыт документ " << filename << std::endl;
             std::cout << "Примитивы в документе:" << std::endl;
             document->drawAllPrimitives();
         } else {
-            std::cout << "Документ не создан."<<std::endl;
+            std::cout << "Документ не найден." << std::endl;
         }
     }
 
     void saveDocument(const std::string& filename) {
-        if (document->getName() == filename) {
+        auto it = documents.find(filename);
+        if (it != documents.end()) {
+            auto& document = it->second;
             document->saveToFile(filename);
+            std::cout << "Документ '" << filename << "' сохранен." << std::endl;
             std::cout << "Примитивы в документе:" << std::endl;
-            document->drawAllPrimitives();//вызов функции отрисовки для вывода в консоль всех примитивов добавленных в данный документ
+            document->drawAllPrimitives();
         } else {
-            std::cout << "Документ не создан."<<std::endl;
+            std::cout << "Документ не найден." << std::endl;
         }
     }
 
-    void addPrimitive(const std::string& type) {
-    if (document) {
-        std::cout << "Введите имя примитива: ";
-        std::string name;
-        std::cin >> name;
+    void addPrimitive(const std::string& filename, const std::string& type) {
+        auto it = documents.find(filename);
+        if (it != documents.end()) {
+            auto& document = it->second;
 
-        if (type == "rectangle") {
-            std::cout << "Введите ширину: ";
-            double width;
-            std::cin >> width;
-            std::cout << "Введите высоту: ";
-            double height;
-            std::cin >> height;
-            document->addPrimitive(std::make_shared<Rectangle>(name, width, height));
+            std::cout << "Введите имя примитива: ";
+            std::string name;
+            std::cin >> name;
 
-        } else if (type == "square") {
-            std::cout << "Введите длину стороны: ";
-            double side;
-            std::cin >> side;
-            document->addPrimitive(std::make_shared<Square>(name, side));
+            if (type == "rectangle") {
+                double width, height;
+                std::cout << "Введите ширину: ";
+                std::cin >> width;
+                std::cout << "Введите высоту: ";
+                std::cin >> height;
+                document->addPrimitive(std::make_shared<Rectangle>(name, width, height));
 
-        } else if (type == "circle") {
-            std::cout << "Введите радиус: ";
-            double radius;
-            std::cin >> radius;
-            document->addPrimitive(std::make_shared<Circle>(name, radius));
+            } else if (type == "square") {
+                double side;
+                std::cout << "Введите длину стороны: ";
+                std::cin >> side;
+                document->addPrimitive(std::make_shared<Square>(name, side));
 
-        } else if (type == "triangle") {
-            std::cout << "Введите длину стороны a: ";
-            double a;
-            std::cin >> a;
-            std::cout << "Введите длину стороны b: ";
-            double b;
-            std::cin >> b;
-            std::cout << "Введите длину стороны c: ";
-            double c;
-            std::cin >> c;
-            document->addPrimitive(std::make_shared<Triangle>(name, a, b, c));
+            } else if (type == "circle") {
+                double radius;
+                std::cout << "Введите радиус: ";
+                std::cin >> radius;
+                document->addPrimitive(std::make_shared<Circle>(name, radius));
 
+            } else if (type == "triangle") {
+                double a, b, c;
+                std::cout << "Введите длину стороны a: ";
+                std::cin >> a;
+                std::cout << "Введите длину стороны b: ";
+                std::cin >> b;
+                std::cout << "Введите длину стороны c: ";
+                std::cin >> c;
+                document->addPrimitive(std::make_shared<Triangle>(name, a, b, c));
+
+            } else {
+                std::cout << "Неподдерживаемый тип примитива.\n";
+            }
         } else {
-            std::cout << "Неподдерживаемый тип примитива.\n";
+            std::cout << "Документ не найден.\n";
         }
-    } else {
-        std::cout << "Документ не создан.\n";
     }
-}
-    
-    void removePrimitive(const std::string& primitiveName, const std::string& primitiveType) {
-        if (document) {
+
+    void removePrimitive(const std::string& filename, const std::string& primitiveName, const std::string& primitiveType) {
+        auto it = documents.find(filename);
+        if (it != documents.end()) {
+            auto& document = it->second;
             document->removePrimitive(primitiveName, primitiveType);
         } else {
-            std::cout << "Документ не создан." << std::endl;
+            std::cout << "Документ не найден." << std::endl;
         }
     }
 
     void removeDocument(const std::string& filename) {
-        if (document->getName() == filename) {
+        auto it = documents.find(filename);
+        if (it != documents.end()) {
+            auto& document = it->second;
             std::cout << "Удаление документа '" << filename << "' и всех содержащихся примитивов:" << std::endl;
             document->deleteAllPrimitives();
-            document.reset(); // Удаляет указатель на документ; примитивы удаляются автоматически, если нет других ссылок
+            documents.erase(it); // Remove the document from the map
         } else {
-            std::cout << "Документ не создан." << std::endl;
+            std::cout << "Документ не найден." << std::endl;
         }
     }
+
 private:
-    std::shared_ptr<Document> document;
+    // Use a map to store documents by their names
+    std::unordered_map<std::string, std::shared_ptr<Document>> documents;
 };
 
 #endif

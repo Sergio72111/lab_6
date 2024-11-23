@@ -1,87 +1,82 @@
-#include <iostream> 
-#include <string> 
-#include <vector> 
-#include <memory> 
-#include "Document.h" 
-#include "Primitive.h" 
-// #include "Rectangle.h" // Закомментированное подключение заголовка Rectangle.h (не требуется, так как Rectangle уже включен через Primitive)
-#include "DocumentController.h" 
+#include <iostream>
+#include "DocumentController.h"
 
-// Представление (GUI) - очень упрощенная реализация для демонстрации
-void printMenu() { // Функция для отображения меню действий
-    std::cout << "\nВыберите действие:\n"; 
-    std::cout << "1. Создать документ\n";     
-    std::cout << "2. Открыть документ\n"; 
-    std::cout << "3. Сохранить документ\n"; 
-    std::cout << "4. Удалить документ\n"; 
-    std::cout << "5. Добавить примитив\n"; 
-    std::cout << "6. Удалить примитив\n";  
-    std::cout << "7. Выход\n"; 
-    std::cout << "Введите номер действия: "; 
-}
+int main() {
+    DocumentController controller;
+    int choice;
 
-int main() { // Главная функция программы
-    std::shared_ptr<DocumentController> controller = std::make_shared<DocumentController>(); // Создание умного указателя на объект DocumentController
+    while (true) {
+        std::cout << "Выберите действие:\n";
+        std::cout << "1. Создать документ\n";
+        std::cout << "2. Открыть документ\n";
+        std::cout << "3. Сохранить документ\n";
+        std::cout << "4. Добавить примитив\n";
+        std::cout << "5. Удалить примитив\n";
+        std::cout << "6. Удалить документ\n";
+        std::cout << "7. Выход\n";
+        std::cout << "Ваш выбор: ";
+        std::cin >> choice;
 
-    while (true) { // Бесконечный цикл для обработки пользовательских действий
-        printMenu(); // Вызов функции для отображения меню действий
-        int choice; // Переменная для хранения выбора пользователя
-        std::cin >> choice; // Считывание выбора пользователя с ввода
-
-        switch (choice) { // Проверка выбора пользователя с помощью оператора switch
-            case 1: // Если выбран пункт 1 - создание документа
-                controller->createDocument(); // Вызов метода создания документа у контроллера
-                break; // Завершение обработки текущего выбора
-
-            case 2: { // Если выбран пункт 2 - открытие документа
-                std::string filename; // Переменная для хранения имени файла
-                std::cout << "Введите имя файла: "; 
-                std::cin >> filename; // Считывание имени файла с ввода
-                controller->openDocument(filename); // Вызов метода открытия документа у контроллера с указанным именем файла
-                break; // Завершение обработки текущего выбора
+        switch (choice) {
+            case 1: {
+                controller.createDocument();
+                break;
             }
-
-            case 3: { // Если выбран пункт 3 - сохранение документа
-                std::string filename; // Переменная для хранения имени файла
-                std::cout << "Введите имя файла: "; 
-                std::cin >> filename; // Считывание имени файла с ввода
-                controller->saveDocument(filename); // Вызов метода сохранения документа у контроллера с указанным именем файла
-                break; // Завершение обработки текущего выбора
+            case 2: {
+                std::cout << "Введите имя документа для открытия: ";
+                std::string filename;
+                std::cin >> filename;
+                controller.openDocument(filename);
+                break;
             }
-
-            case 4: { // Если выбран пункт 4 - удаление документа
-                std::string filename; // Переменная для хранения имени файла
-                std::cout << "Введите имя файла: "; 
-                std::cin >> filename; // Считывание имени файла с ввода
-                controller->removeDocument(filename); // Вызов метода удаления документа у контроллера с указанным именем файла
-                break; // Завершение обработки текущего выбора
+            case 3: {
+                std::cout << "Введите имя документа для сохранения: ";
+                std::string filename;
+                std::cin >> filename;
+                controller.saveDocument(filename);
+                break;
             }
+            case 4: {
+                std::cout << "Введите имя документа для добавления примитива: ";
+                std::string filename;
+                std::cin >> filename;
 
-            case 5: { // Если выбран пункт 5 - добавление примитива в документ
-                std::cout << "Введите тип примитива (rectangle, square, circle, triangle...): "; 
-                std::string type; // Переменная для хранения типа примитива 
-                std::cin >> type; // Считывание типа примитива с ввода 
-                controller->addPrimitive(type); // Вызов метода добавления примитива у контроллера с указанным типом 
-                break; // Завершение обработки текущего выбора 
+                std::cout << "Введите тип примитива (rectangle/square/circle/triangle): ";
+                std::string type;
+                std::cin >> type;
+
+                controller.addPrimitive(filename, type);
+                break;
             }
+            case 5: {
+                std::cout << "Введите имя документа для удаления примитива: ";
+                std::string filename;
+                std::cin >> filename;
 
-            case 6: { // Если выбран пункт 6 - удаление примитива из документа 
-                std::cout << "Введите тип примитива (rectangle, square, circle, triangle...): ";  
-                std::string type;  // Переменная для хранения типа примитива 
-                std::cin >> type;  // Считывание типа примитива с ввода 
-                std::cout << "Введите имя примитива: ";  
-                std::string nameToRemove;  // Переменная для хранения имени примитива 
-                std::cin >> nameToRemove;  // Считывание имени примитива с ввода 
-                controller->removePrimitive(nameToRemove, type);  // Вызов метода удаления примитива у контроллера с указанным именем и типом 
-                break;  // Завершение обработки текущего выбора 
+                std::cout << "Введите имя примитива для удаления: ";
+                std::string primitiveName;
+                std::cin >> primitiveName;
+
+                std::cout << "Введите тип примитива (rectangle/square/circle/triangle): ";
+                std::string primitiveType;
+                std::cin >> primitiveType;
+
+                controller.removePrimitive(filename, primitiveName, primitiveType);
+                break;
             }
-
-            case 7:  // Если выбран пункт 7 - выход из программы 
-                std::cout << "Выход...\n";  
-                return 0;  // Завершение программы 
-
-            default:  // Если введен некорректный выбор 
-                std::cout << "Некорректный выбор.\n";  
+            case 6: {
+                std::cout << "Введите имя документа для удаления: ";
+                std::string filename;
+                std::cin >> filename;
+                controller.removeDocument(filename);
+                break;
+            }
+            case 7:
+                return 0; // Exit the program
+            default:
+                std::cout << "Неверный выбор. Пожалуйста, попробуйте снова.\n";
         }
     }
-} 
+
+    return 0; // This line is technically unreachable but is good practice
+}
