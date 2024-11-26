@@ -7,7 +7,7 @@
 class Primitive { // Определение абстрактного базового класса Primitive
 public: // Объявление публичной секции класса
 
-    Primitive(const std::string& name, const std::string& type) : name(name), type(type) {} // Конструктор класса, инициализирующий имя и тип примитива
+    Primitive(const std::string& name, const std::string& type) : name(name), type(type) {} // Конструктор класса, инициализирующий имя и тип примитива 
 
     std::string getName() const { // Метод для получения имени примитива
         return name; // Возврат имени примитива
@@ -47,17 +47,19 @@ private: // Объявление приватной секции класса
     double height; // Высота прямоугольника
 };
 
-class Square : public Rectangle { // Определение класса Square, наследующего от Rectangle
+class Square : public Primitive { 
 public: // Объявление публичной секции класса
-    Square(const std::string& name, double side) : Rectangle(name, side, side) {} // Конструктор использует сторону как ширину и высоту
+    Square(const std::string& name, double side) : Primitive(name, "square"), side(side) {}
 
     void draw() override { // Переопределение метода draw для отрисовки квадрата
-        std::cout << "Отрисовка квадрата " << getName() << " (сторона: " <<  getWidth() << ")" << std::endl; 
+        std::cout << "Отрисовка квадрата " << getName() << " (длина: " << side << ")" << std::endl; 
     }
 
     std::string get() const override { // Переопределение метода get для получения информации о квадрате
-        return "квадрата " + getName() + " (сторона: " + std::to_string(getWidth()) + ")"; 
-    }
+        return "квадрата " + getName() + " (длина: " + std::to_string(side) + ")"; // Формирование строки с информацией о квадрате
+    } 
+private: // Объявление приватной секции класса
+    double side; 
 };
 
 class Circle : public Primitive { // Определение класса Circle, наследующего от Primitive

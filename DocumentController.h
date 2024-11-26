@@ -1,125 +1,125 @@
-#ifndef DOCUMENTCONTROLLER_H
+#ifndef DOCUMENTCONTROLLER_H 
 #define DOCUMENTCONTROLLER_H
 
-#include <memory>
-#include <iostream>
-#include <unordered_map>
+#include <memory> 
+#include <iostream> 
+#include <unordered_map> 
 #include "Document.h"
 
-class DocumentController {
+class DocumentController { // Определение класса DocumentController
 public:
-    void createDocument() {
-        std::cout << "Введите имя нового документа: ";
-        std::string name;
-        std::cin >> name;
+    void createDocument() { // Метод для создания нового документа
+        std::cout << "Введите имя нового документа: "; 
+        std::string name; // Переменная для хранения имени документа
+        std::cin >> name; // Считывание имени документа с ввода
 
-        // Check if document already exists
-        if (documents.find(name) != documents.end()) {
-            std::cout << "Документ с таким именем уже существует." << std::endl;
-            return;
+        // Проверка, существует ли документ с таким именем
+        if (documents.find(name) != documents.end()) { 
+            std::cout << "Документ с таким именем уже существует." << std::endl; 
+            return; // Выход из метода
         }
 
-        documents[name] = std::make_shared<Document>(name);
-        std::cout << "Создан документ " << name << std::endl;
+        documents[name] = std::make_shared<Document>(name); // Создание нового документа и добавление его в хэш-таблицу
+        std::cout << "Создан документ " << name << std::endl; 
     }
 
-    void openDocument(const std::string& filename) {
-        auto it = documents.find(filename);
-        if (it != documents.end()) {
-            auto& document = it->second;
-            std::cout << "Открыт документ " << filename << std::endl;
+    void openDocument(const std::string& filename) { // Метод для открытия существующего документа по имени файла
+        auto it = documents.find(filename); // Поиск документа в хэш-таблице
+        if (it != documents.end()) { // Если документ найден
+            auto& document = it->second; // Получение указателя на документ
+            std::cout << "Открыт документ " << filename << std::endl; 
             std::cout << "Примитивы в документе:" << std::endl;
-            document->drawAllPrimitives();
+            document->drawAllPrimitives(); // Вызов метода для отображения всех примитивов в документе
         } else {
-            std::cout << "Документ не найден." << std::endl;
+            std::cout << "Документ не найден." << std::endl; 
         }
     }
 
-    void saveDocument(const std::string& filename) {
-        auto it = documents.find(filename);
-        if (it != documents.end()) {
-            auto& document = it->second;
-            document->saveToFile(filename);
-            std::cout << "Документ '" << filename << "' сохранен." << std::endl;
+    void saveDocument(const std::string& filename) { // Метод для сохранения существующего документа по имени файла
+        auto it = documents.find(filename); // Поиск документа в хэш-таблице
+        if (it != documents.end()) { // Если документ найден
+            auto& document = it->second; // Получение указателя на документ
+            document->saveToFile(filename); // Вызов метода для сохранения документа в файл
+            std::cout << "Документ '" << filename << "' сохранен." << std::endl; 
             std::cout << "Примитивы в документе:" << std::endl;
-            document->drawAllPrimitives();
+            document->drawAllPrimitives(); // Вызов метода для отображения всех примитивов в документе после сохранения
         } else {
-            std::cout << "Документ не найден." << std::endl;
+            std::cout << "Документ не найден." << std::endl; 
         }
     }
 
-    void addPrimitive(const std::string& filename, const std::string& type) {
-        auto it = documents.find(filename);
-        if (it != documents.end()) {
-            auto& document = it->second;
+    void addPrimitive(const std::string& filename, const std::string& type) { // Метод для добавления примитива в документ по имени файла и типу примитива
+        auto it = documents.find(filename); // Поиск документа в хэш-таблице
+        if (it != documents.end()) { // Если документ найден
+            auto& document = it->second; // Получение указателя на документ
 
-            std::cout << "Введите имя примитива: ";
-            std::string name;
-            std::cin >> name;
+            std::cout << "Введите имя примитива: "; 
+            std::string name; // Переменная для хранения имени примитива
+            std::cin >> name; // Считывание имени примитива с ввода
 
-            if (type == "rectangle") {
-                double width, height;
-                std::cout << "Введите ширину: ";
-                std::cin >> width;
-                std::cout << "Введите высоту: ";
-                std::cin >> height;
-                document->addPrimitive(std::make_shared<Rectangle>(name, width, height));
+            if (type == "rectangle") { // Если тип примитива - прямоугольник
+                double width, height; // Переменные для хранения ширины и высоты прямоугольника
+                std::cout << "Введите ширину: "; 
+                std::cin >> width; // Считывание ширины с ввода
+                std::cout << "Введите высоту: "; 
+                std::cin >> height; // Считывание высоты с ввода
+                document->addPrimitive(std::make_shared<Rectangle>(name, width, height)); // Создание прямоугольника и добавление его в документ
 
-            } else if (type == "square") {
-                double side;
-                std::cout << "Введите длину стороны: ";
-                std::cin >> side;
-                document->addPrimitive(std::make_shared<Square>(name, side));
+            } else if (type == "square") { // Если тип примитива - квадрат
+                double side; 
+                std::cout << "Введите длину стороны: "; 
+                std::cin >> side; 
+                document->addPrimitive(std::make_shared<Square>(name, side)); // Создание квадрата и добавление его в документ
 
-            } else if (type == "circle") {
+            } else if (type == "circle") { // Если тип примитива - круг
                 double radius;
-                std::cout << "Введите радиус: ";
-                std::cin >> radius;
-                document->addPrimitive(std::make_shared<Circle>(name, radius));
+                std::cout << "Введите радиус: "; 
+                std::cin >> radius; 
+                document->addPrimitive(std::make_shared<Circle>(name, radius));  // Создание круга и добавление его в документ
 
-            } else if (type == "triangle") {
-                double a, b, c;
-                std::cout << "Введите длину стороны a: ";
-                std::cin >> a;
-                std::cout << "Введите длину стороны b: ";
-                std::cin >> b;
-                std::cout << "Введите длину стороны c: ";
-                std::cin >> c;
-                document->addPrimitive(std::make_shared<Triangle>(name, a, b, c));
+            } else if (type == "triangle") {  // Если тип примитива - треугольник 
+                double a, b, c; 
+                std::cout << "Введите длину стороны a: "; 
+                std::cin >> a; 
+                std::cout << "Введите длину стороны b: "; 
+                std::cin >> b; 
+                std::cout << "Введите длину стороны c: "; 
+                std::cin >> c; 
+                document->addPrimitive(std::make_shared<Triangle>(name, a, b, c));  // Создание треугольника и добавление его в документ
 
             } else {
-                std::cout << "Неподдерживаемый тип примитива.\n";
+                std::cout << "Неподдерживаемый тип примитива.\n"; 
             }
         } else {
-            std::cout << "Документ не найден.\n";
+            std::cout << "Документ не найден.\n";  
         }
     }
 
-    void removePrimitive(const std::string& filename, const std::string& primitiveName, const std::string& primitiveType) {
-        auto it = documents.find(filename);
-        if (it != documents.end()) {
-            auto& document = it->second;
-            document->removePrimitive(primitiveName, primitiveType);
+    void removePrimitive(const std::string& filename, const std::string& primitiveName, const std::string& primitiveType) {  // Метод для удаления примитива из документа по имени файла, имени и типу примитива 
+        auto it = documents.find(filename);  // Поиск документа в хэш-таблице 
+        if (it != documents.end()) {  // Если документ найден 
+            auto& document = it->second;  // Получение указателя на документ 
+            document->removePrimitive(primitiveName, primitiveType);  // Вызов метода для удаления примитива из документа  
         } else {
-            std::cout << "Документ не найден." << std::endl;
+            std::cout << "Документ не найден." << std::endl;   
         }
     }
 
-    void removeDocument(const std::string& filename) {
-        auto it = documents.find(filename);
-        if (it != documents.end()) {
-            auto& document = it->second;
-            std::cout << "Удаление документа '" << filename << "' и всех содержащихся примитивов:" << std::endl;
-            document->deleteAllPrimitives();
-            documents.erase(it); // Remove the document from the map
+    void removeDocument(const std::string& filename) {  // Метод для удаления документа по имени файла  
+        auto it = documents.find(filename);  // Поиск документа в хэш-таблице  
+        if (it != documents.end()) {  // Если документ найден  
+            auto& document = it->second;  // Получение указателя на документ  
+            std::cout << "Удаление документа '" << filename << "' и всех содержащихся примитивов:" << std::endl;  
+            document->deleteAllPrimitives();  // Вызов метода для удаления всех примитивов из документа  
+            documents.erase(it);  // Удаление документа из хэш-таблицы  
         } else {
-            std::cout << "Документ не найден." << std::endl;
+            std::cout << "Документ не найден." << std::endl;   
         }
     }
 
 private:
-    // Use a map to store documents by their names
-    std::unordered_map<std::string, std::shared_ptr<Document>> documents;
+    // Использование карты для хранения документов по их именам  
+    std::unordered_map<std::string, std::shared_ptr<Document>> documents;  // Хэш-таблица для хранения указателей на документы  
 };
 
-#endif
+#endif  // Завершение условной компиляции  
